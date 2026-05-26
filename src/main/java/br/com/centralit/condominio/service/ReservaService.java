@@ -1,7 +1,9 @@
 package br.com.centralit.condominio.service;
 
+import br.com.centralit.condominio.entity.Morador;
 import br.com.centralit.condominio.entity.Reserva;
 import br.com.centralit.condominio.enums.StatusReserva;
+import br.com.centralit.condominio.repository.MoradorRepository;
 import br.com.centralit.condominio.repository.ReservaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class ReservaService {
 
     private final ReservaRepository repository;
+    private final MoradorRepository moradorRepository;
 
     public List<Reserva> findAll() {
         return repository.findAll();
@@ -30,6 +33,15 @@ public class ReservaService {
         if (!reserva.getDataHoraFim().isAfter(reserva.getDataHoraInicio())) {
             throw new IllegalArgumentException(
                 "Data/hora fim deve ser posterior à data/hora início"
+            );
+        }
+
+        // Solicitante deve pertencer à unidade da reserva
+        Morador solicitante = moradorRepository.findById(reserva.getSolicitante().getId())
+            .orElseThrow(() -> new IllegalArgumentException("Solicitante não encontrado"));
+        if (!solicitante.getUnidade().getId().equals(reserva.getUnidade().getId())) {
+            throw new IllegalArgumentException(
+                "Solicitante não é morador da unidade informada"
             );
         }
 
