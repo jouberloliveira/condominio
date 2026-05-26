@@ -40,14 +40,14 @@ class MoradorServiceTest {
 
         Morador morador1 = new Morador();
         morador1.setNome("João");
-        morador1.setCpf("12345678901");
+        morador1.setCpf("52998224725");
         morador1.setTipo(TipoMorador.PROPRIETARIO);
         morador1.setUnidade(unidade);
         moradorService.save(morador1);
 
         Morador morador2 = new Morador();
         morador2.setNome("Maria");
-        morador2.setCpf("12345678901");
+        morador2.setCpf("52998224725");
         morador2.setTipo(TipoMorador.INQUILINO);
         morador2.setUnidade(unidade);
 
@@ -68,7 +68,7 @@ class MoradorServiceTest {
 
         Morador responsavel1 = new Morador();
         responsavel1.setNome("Pedro");
-        responsavel1.setCpf("11111111111");
+        responsavel1.setCpf("52998224725");
         responsavel1.setTipo(TipoMorador.PROPRIETARIO);
         responsavel1.setResponsavel(SimNao.SIM);
         responsavel1.setUnidade(unidade);
@@ -76,7 +76,7 @@ class MoradorServiceTest {
 
         Morador responsavel2 = new Morador();
         responsavel2.setNome("Ana");
-        responsavel2.setCpf("22222222222");
+        responsavel2.setCpf("11144477735");
         responsavel2.setTipo(TipoMorador.PROPRIETARIO);
         responsavel2.setResponsavel(SimNao.SIM);
         responsavel2.setUnidade(unidade);
@@ -86,6 +86,48 @@ class MoradorServiceTest {
         });
 
         assertTrue(exception.getMessage().contains("já possui um responsável"));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoCpfComDigitosIguais() {
+        Unidade unidade = new Unidade();
+        unidade.setBloco("C");
+        unidade.setNumero("303");
+        unidade.setSituacao(SituacaoUnidade.OCUPADA);
+        unidade = unidadeRepository.save(unidade);
+
+        Morador morador = new Morador();
+        morador.setNome("Carlos");
+        morador.setCpf("11111111111");
+        morador.setTipo(TipoMorador.PROPRIETARIO);
+        morador.setUnidade(unidade);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            moradorService.save(morador);
+        });
+
+        assertTrue(exception.getMessage().contains("CPF inválido"));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoCpfComDigitosVerificadoresInvalidos() {
+        Unidade unidade = new Unidade();
+        unidade.setBloco("D");
+        unidade.setNumero("404");
+        unidade.setSituacao(SituacaoUnidade.OCUPADA);
+        unidade = unidadeRepository.save(unidade);
+
+        Morador morador = new Morador();
+        morador.setNome("Fernanda");
+        morador.setCpf("12345678901");
+        morador.setTipo(TipoMorador.PROPRIETARIO);
+        morador.setUnidade(unidade);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            moradorService.save(morador);
+        });
+
+        assertTrue(exception.getMessage().contains("CPF inválido"));
     }
 
 }
