@@ -1,6 +1,8 @@
 package br.com.centralit.condominio.controller;
 
 import br.com.centralit.condominio.entity.Unidade;
+import br.com.centralit.condominio.enums.SimNao;
+import br.com.centralit.condominio.enums.SituacaoUnidade;
 import br.com.centralit.condominio.service.UnidadeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ public class UnidadeController {
     @GetMapping("/novo")
     public String formNovo(Model model) {
         model.addAttribute("unidade", new Unidade());
+        addFormModel(model);
         return "unidades/form";
     }
 
@@ -31,6 +34,7 @@ public class UnidadeController {
         return service.findById(id)
             .map(unidade -> {
                 model.addAttribute("unidade", unidade);
+                addFormModel(model);
                 return "unidades/form";
             })
             .orElse("redirect:/unidades");
@@ -55,4 +59,8 @@ public class UnidadeController {
         return "redirect:/unidades";
     }
 
+    private void addFormModel(Model model) {
+        model.addAttribute("situacoes", SituacaoUnidade.values());
+        model.addAttribute("simNaoValues", SimNao.values());
+    }
 }

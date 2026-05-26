@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<head><title>Reservas</title></head>
+<body>
+<main>
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Reservas</h1>
+        <a href="/reservas/novo" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Nova Reserva</a>
+    </div>
+
+    <div th:if="${reservas.empty}" class="text-gray-500">Nenhuma reserva cadastrada.</div>
+
+    <table th:unless="${reservas.empty}" class="w-full bg-white shadow rounded">
+        <thead class="bg-gray-200 text-gray-700 text-sm">
+        <tr>
+            <th class="px-4 py-2 text-left">Área</th>
+            <th class="px-4 py-2 text-left">Unidade</th>
+            <th class="px-4 py-2 text-left">Solicitante</th>
+            <th class="px-4 py-2 text-left">Início</th>
+            <th class="px-4 py-2 text-left">Status</th>
+            <th class="px-4 py-2"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${reservas}" class="border-t hover:bg-gray-50">
+            <td class="px-4 py-2" th:text="${r.area}"></td>
+            <td class="px-4 py-2" th:text="${r.unidade?.identificacao}"></td>
+            <td class="px-4 py-2" th:text="${r.solicitante?.nome}"></td>
+            <td class="px-4 py-2" th:text="${#temporals.format(r.dataHoraInicio, 'dd/MM/yyyy HH:mm')}"></td>
+            <td class="px-4 py-2" th:text="${r.status}"></td>
+            <td class="px-4 py-2 flex gap-2">
+                <a th:href="@{/reservas/{id}/editar(id=${r.id})}" class="text-blue-600 hover:underline text-sm">Editar</a>
+                <form th:action="@{/reservas/{id}/excluir(id=${r.id})}" method="post">
+                    <button type="submit" class="text-red-600 hover:underline text-sm"
+                            onclick="return confirm('Excluir?')">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

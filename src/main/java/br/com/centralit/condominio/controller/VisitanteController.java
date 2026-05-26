@@ -1,6 +1,10 @@
 package br.com.centralit.condominio.controller;
 
 import br.com.centralit.condominio.entity.Visitante;
+import br.com.centralit.condominio.enums.SimNao;
+import br.com.centralit.condominio.enums.TipoVisitante;
+import br.com.centralit.condominio.service.MoradorService;
+import br.com.centralit.condominio.service.UnidadeService;
 import br.com.centralit.condominio.service.VisitanteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class VisitanteController {
 
     private final VisitanteService service;
+    private final UnidadeService unidadeService;
+    private final MoradorService moradorService;
 
     @GetMapping
     public String lista(Model model) {
@@ -23,6 +29,7 @@ public class VisitanteController {
     @GetMapping("/novo")
     public String formNovo(Model model) {
         model.addAttribute("visitante", new Visitante());
+        addFormModel(model);
         return "visitantes/form";
     }
 
@@ -31,6 +38,7 @@ public class VisitanteController {
         return service.findById(id)
             .map(visitante -> {
                 model.addAttribute("visitante", visitante);
+                addFormModel(model);
                 return "visitantes/form";
             })
             .orElse("redirect:/visitantes");
@@ -55,4 +63,10 @@ public class VisitanteController {
         return "redirect:/visitantes";
     }
 
+    private void addFormModel(Model model) {
+        model.addAttribute("unidades", unidadeService.findAll());
+        model.addAttribute("moradores", moradorService.findAll());
+        model.addAttribute("tipos", TipoVisitante.values());
+        model.addAttribute("simNaoValues", SimNao.values());
+    }
 }

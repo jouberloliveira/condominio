@@ -1,7 +1,10 @@
 package br.com.centralit.condominio.controller;
 
 import br.com.centralit.condominio.entity.Morador;
+import br.com.centralit.condominio.enums.SimNao;
+import br.com.centralit.condominio.enums.TipoMorador;
 import br.com.centralit.condominio.service.MoradorService;
+import br.com.centralit.condominio.service.UnidadeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class MoradorController {
 
     private final MoradorService service;
+    private final UnidadeService unidadeService;
 
     @GetMapping
     public String lista(Model model) {
@@ -23,6 +27,7 @@ public class MoradorController {
     @GetMapping("/novo")
     public String formNovo(Model model) {
         model.addAttribute("morador", new Morador());
+        addFormModel(model);
         return "moradores/form";
     }
 
@@ -31,6 +36,7 @@ public class MoradorController {
         return service.findById(id)
             .map(morador -> {
                 model.addAttribute("morador", morador);
+                addFormModel(model);
                 return "moradores/form";
             })
             .orElse("redirect:/moradores");
@@ -55,4 +61,9 @@ public class MoradorController {
         return "redirect:/moradores";
     }
 
+    private void addFormModel(Model model) {
+        model.addAttribute("unidades", unidadeService.findAll());
+        model.addAttribute("tipos", TipoMorador.values());
+        model.addAttribute("simNaoValues", SimNao.values());
+    }
 }
