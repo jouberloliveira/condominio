@@ -105,4 +105,40 @@ class ReservaServiceTest {
                    exception.getMessage().toLowerCase().contains("já existe reserva"));
     }
 
+    @Test
+    void deveLancarExcecaoQuandoSolicitanteNaoPertenceAUnidade() {
+        Unidade unidadeA = new Unidade();
+        unidadeA.setBloco("C");
+        unidadeA.setNumero("301");
+        unidadeA.setSituacao(SituacaoUnidade.OCUPADA);
+        unidadeA = unidadeRepository.save(unidadeA);
+
+        Unidade unidadeB = new Unidade();
+        unidadeB.setBloco("C");
+        unidadeB.setNumero("302");
+        unidadeB.setSituacao(SituacaoUnidade.OCUPADA);
+        unidadeB = unidadeRepository.save(unidadeB);
+
+        Morador moradorDeA = new Morador();
+        moradorDeA.setNome("Fernanda");
+        moradorDeA.setCpf("55555555555");
+        moradorDeA.setTipo(TipoMorador.PROPRIETARIO);
+        moradorDeA.setUnidade(unidadeA);
+        moradorDeA = moradorRepository.save(moradorDeA);
+
+        Reserva reserva = new Reserva();
+        reserva.setUnidade(unidadeB);
+        reserva.setSolicitante(moradorDeA);
+        reserva.setArea(AreaComum.CHURRASQUEIRA);
+        reserva.setDataHoraInicio(LocalDateTime.now().plusDays(1));
+        reserva.setDataHoraFim(LocalDateTime.now().plusDays(1).plusHours(2));
+        reserva.setStatus(StatusReserva.SOLICITADA);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            reservaService.save(reserva);
+        });
+
+        assertTrue(exception.getMessage().contains("não é morador da unidade"));
+    }
+
 }
