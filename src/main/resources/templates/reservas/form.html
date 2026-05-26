@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<head><title>Reserva</title></head>
+<body>
+<main>
+    <h1 class="text-2xl font-bold text-gray-800 mb-6"
+        th:text="${reserva.id != null} ? 'Editar Reserva' : 'Nova Reserva'"></h1>
+
+    <form th:action="${reserva.id != null} ? @{/reservas/{id}(id=${reserva.id})} : @{/reservas}"
+          th:object="${reserva}" method="post"
+          class="bg-white shadow rounded p-6 flex flex-col gap-4">
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Unidade *</label>
+            <select th:field="*{unidade.id}"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">-- Selecione --</option>
+                <option th:each="u : ${unidades}"
+                        th:value="${u.id}"
+                        th:text="${u.identificacao + ' (Bl.' + u.bloco + ' Nº' + u.numero + ')'}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Solicitante *</label>
+            <select th:field="*{solicitante.id}"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">-- Selecione --</option>
+                <option th:each="m : ${moradores}"
+                        th:value="${m.id}"
+                        th:text="${m.nome + ' (' + m.unidade?.identificacao + ')'}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Área Comum *</label>
+            <select th:field="*{area}"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">-- Selecione --</option>
+                <option th:each="a : ${areas}" th:value="${a}" th:text="${a}"></option>
+            </select>
+            <span th:if="${#fields.hasErrors('area')}" th:errors="*{area}"
+                  class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Data/Hora Início *</label>
+            <input type="datetime-local" th:field="*{dataHoraInicio}"
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+            <span th:if="${#fields.hasErrors('dataHoraInicio')}" th:errors="*{dataHoraInicio}"
+                  class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Data/Hora Fim *</label>
+            <input type="datetime-local" th:field="*{dataHoraFim}"
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+            <span th:if="${#fields.hasErrors('dataHoraFim')}" th:errors="*{dataHoraFim}"
+                  class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status *</label>
+            <select th:field="*{status}"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">-- Selecione --</option>
+                <option th:each="s : ${statusValues}" th:value="${s}" th:text="${s}"></option>
+            </select>
+            <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}"
+                  class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="flex gap-3 mt-2">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Salvar</button>
+            <a href="/reservas"
+               class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded">Cancelar</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<head><title>Unidades</title></head>
+<body>
+<main>
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Unidades</h1>
+        <a href="/unidades/novo" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Nova Unidade</a>
+    </div>
+
+    <div th:if="${unidades.empty}" class="text-gray-500">Nenhuma unidade cadastrada.</div>
+
+    <table th:unless="${unidades.empty}" class="w-full bg-white shadow rounded">
+        <thead class="bg-gray-200 text-gray-700 text-sm">
+        <tr>
+            <th class="px-4 py-2 text-left">Identificação</th>
+            <th class="px-4 py-2 text-left">Bloco</th>
+            <th class="px-4 py-2 text-left">Número</th>
+            <th class="px-4 py-2 text-left">Situação</th>
+            <th class="px-4 py-2"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${unidades}" class="border-t hover:bg-gray-50">
+            <td class="px-4 py-2" th:text="${u.identificacao}"></td>
+            <td class="px-4 py-2" th:text="${u.bloco}"></td>
+            <td class="px-4 py-2" th:text="${u.numero}"></td>
+            <td class="px-4 py-2" th:text="${u.situacao}"></td>
+            <td class="px-4 py-2 flex gap-2">
+                <a th:href="@{/unidades/{id}/editar(id=${u.id})}" class="text-blue-600 hover:underline text-sm">Editar</a>
+                <form th:action="@{/unidades/{id}/excluir(id=${u.id})}" method="post">
+                    <button type="submit" class="text-red-600 hover:underline text-sm"
+                            onclick="return confirm('Excluir?')">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>
