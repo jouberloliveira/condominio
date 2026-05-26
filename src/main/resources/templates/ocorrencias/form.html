@@ -1,61 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main}, 'ocorrencias')}">
 <head><title>Ocorrência</title></head>
 <body>
 <main>
-    <h1 class="text-2xl font-bold text-gray-800 mb-6"
-        th:text="${ocorrencia.id != null} ? 'Editar Ocorrência' : 'Nova Ocorrência'"></h1>
+    <div class="mb-6">
+        <a href="/ocorrencias" class="inline-flex items-center text-sm text-slate-500 hover:text-slate-700">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i> Voltar para Ocorrências
+        </a>
+        <h1 class="text-2xl font-semibold text-slate-900 mt-2"
+            th:text="${ocorrencia.id != null} ? 'Editar Ocorrência' : 'Nova Ocorrência'"></h1>
+    </div>
 
     <form th:action="${ocorrencia.id != null} ? @{/ocorrencias/{id}(id=${ocorrencia.id})} : @{/ocorrencias}"
           th:object="${ocorrencia}" method="post"
-          class="bg-white shadow rounded p-6 flex flex-col gap-4">
+          class="card p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 max-w-3xl">
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Título *</label>
-            <input type="text" th:field="*{titulo}"
-                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
-            <span th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"
-                  class="text-red-500 text-sm"></span>
+        <div class="md:col-span-2">
+            <label class="field-label">Título *</label>
+            <input type="text" th:field="*{titulo}" class="input"/>
+            <span th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo *</label>
-            <select th:field="*{tipo}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Tipo *</label>
+            <select th:field="*{tipo}" class="input">
                 <option value="">-- Selecione --</option>
                 <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
             </select>
-            <span th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"
-                  class="text-red-500 text-sm"></span>
+            <span th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Prioridade *</label>
-            <select th:field="*{prioridade}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Prioridade *</label>
+            <select th:field="*{prioridade}" class="input">
                 <option value="">-- Selecione --</option>
                 <option th:each="p : ${prioridades}" th:value="${p}" th:text="${p}"></option>
             </select>
-            <span th:if="${#fields.hasErrors('prioridade')}" th:errors="*{prioridade}"
-                  class="text-red-500 text-sm"></span>
+            <span th:if="${#fields.hasErrors('prioridade')}" th:errors="*{prioridade}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Status *</label>
-            <select th:field="*{status}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Status *</label>
+            <select th:field="*{status}" class="input">
                 <option value="">-- Selecione --</option>
                 <option th:each="s : ${statusValues}" th:value="${s}" th:text="${s}"></option>
             </select>
-            <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}"
-                  class="text-red-500 text-sm"></span>
+            <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Unidade</label>
-            <select th:field="*{unidade.id}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Unidade</label>
+            <select th:field="*{unidade.id}" class="input">
                 <option value="">-- Nenhuma --</option>
                 <option th:each="u : ${unidades}"
                         th:value="${u.id}"
@@ -64,10 +60,9 @@
             </select>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Aberto Por (Morador)</label>
-            <select th:field="*{abertoPor.id}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <div class="md:col-span-2">
+            <label class="field-label">Aberto Por (Morador)</label>
+            <select th:field="*{abertoPor.id}" class="input">
                 <option value="">-- Nenhum --</option>
                 <option th:each="m : ${moradores}"
                         th:value="${m.id}"
@@ -76,31 +71,27 @@
             </select>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
-            <textarea th:field="*{descricao}" rows="4"
-                      class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+        <div class="md:col-span-2">
+            <label class="field-label">Descrição</label>
+            <textarea th:field="*{descricao}" rows="4" class="input"></textarea>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Data/Hora Abertura *</label>
-            <input type="datetime-local" th:field="*{dataHoraAbertura}"
-                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
-            <span th:if="${#fields.hasErrors('dataHoraAbertura')}" th:errors="*{dataHoraAbertura}"
-                  class="text-red-500 text-sm"></span>
+            <label class="field-label">Data/Hora Abertura *</label>
+            <input type="datetime-local" th:field="*{dataHoraAbertura}" class="input"/>
+            <span th:if="${#fields.hasErrors('dataHoraAbertura')}" th:errors="*{dataHoraAbertura}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Data/Hora Fechamento</label>
-            <input type="datetime-local" th:field="*{dataHoraFechamento}"
-                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+            <label class="field-label">Data/Hora Fechamento</label>
+            <input type="datetime-local" th:field="*{dataHoraFechamento}" class="input"/>
         </div>
 
-        <div class="flex gap-3 mt-2">
-            <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Salvar</button>
-            <a href="/ocorrencias"
-               class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded">Cancelar</a>
+        <div class="md:col-span-2 flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 mt-2">
+            <button type="submit" class="btn-primary">
+                <i data-lucide="check" class="w-4 h-4"></i> Salvar
+            </button>
+            <a href="/ocorrencias" class="btn-secondary">Cancelar</a>
         </div>
     </form>
 </main>

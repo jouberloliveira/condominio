@@ -1,27 +1,117 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:fragment="layout(title, content)">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(title, content, active)">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:replace="${title}">Condomínio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50:  '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .nav-item        { @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition; }
+        .nav-item.active { @apply bg-brand-50 text-brand-700 hover:bg-brand-100; }
+        .nav-item svg    { @apply w-5 h-5 shrink-0; }
+        .btn-primary     { @apply inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition; }
+        .btn-secondary   { @apply inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-sm font-medium transition; }
+        .btn-danger-ghost{ @apply inline-flex items-center text-rose-600 hover:text-rose-700 hover:bg-rose-50 text-xs font-medium px-2 py-1 rounded-md transition; }
+        .btn-link        { @apply inline-flex items-center text-brand-600 hover:text-brand-700 hover:bg-brand-50 text-xs font-medium px-2 py-1 rounded-md transition; }
+        .input           { @apply w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition; }
+        .field-label     { @apply block text-sm font-medium text-slate-700 mb-1.5; }
+        .field-error     { @apply text-rose-600 text-xs mt-1; }
+        .card            { @apply bg-white border border-slate-200 rounded-2xl shadow-sm; }
+        .badge           { @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-700; }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-slate-50 text-slate-800 min-h-screen antialiased">
 
-<nav class="bg-blue-700 text-white shadow">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-6">
-        <span class="font-bold text-lg">Condomínio</span>
-        <a href="/unidades"   class="hover:underline">Unidades</a>
-        <a href="/moradores"  class="hover:underline">Moradores</a>
-        <a href="/visitantes" class="hover:underline">Visitantes</a>
-        <a href="/reservas"   class="hover:underline">Reservas</a>
-        <a href="/ocorrencias" class="hover:underline">Ocorrências</a>
+<div class="flex min-h-screen">
+
+    <aside class="hidden md:flex w-64 shrink-0 flex-col bg-white border-r border-slate-200">
+        <div class="h-16 flex items-center gap-2 px-6 border-b border-slate-200">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white shadow-sm">
+                <i data-lucide="building-2" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <div class="font-semibold text-slate-900 leading-none">Condomínio</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">Gestão</div>
+            </div>
+        </div>
+        <nav class="flex-1 p-3 space-y-1">
+            <a href="/"             th:classappend="${active == 'home'}        ? 'active'" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="/unidades"     th:classappend="${active == 'unidades'}    ? 'active'" class="nav-item"><i data-lucide="home"></i> Unidades</a>
+            <a href="/moradores"    th:classappend="${active == 'moradores'}   ? 'active'" class="nav-item"><i data-lucide="users"></i> Moradores</a>
+            <a href="/visitantes"   th:classappend="${active == 'visitantes'}  ? 'active'" class="nav-item"><i data-lucide="user-plus"></i> Visitantes</a>
+            <a href="/reservas"     th:classappend="${active == 'reservas'}    ? 'active'" class="nav-item"><i data-lucide="calendar-days"></i> Reservas</a>
+            <a href="/ocorrencias"  th:classappend="${active == 'ocorrencias'} ? 'active'" class="nav-item"><i data-lucide="alert-triangle"></i> Ocorrências</a>
+        </nav>
+        <div class="p-4 border-t border-slate-200 text-[11px] text-slate-400">
+            v0.0.1 · CentralIT
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 sticky top-0 z-10">
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="mobileMenuBtn" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menu">
+                    <i data-lucide="menu" class="w-5 h-5 text-slate-700"></i>
+                </button>
+                <span class="font-semibold">Condomínio</span>
+            </div>
+            <div class="hidden md:block text-sm text-slate-500">
+                Sistema de Gestão de Condomínio
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="hidden sm:inline text-xs text-slate-500" th:text="${#dates != null} ? '' : ''"></span>
+                <div class="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold text-sm">
+                    <i data-lucide="user" class="w-4 h-4"></i>
+                </div>
+            </div>
+        </header>
+
+        <nav id="mobileNav" class="hidden md:hidden bg-white border-b border-slate-200 p-3 space-y-1">
+            <a href="/"            th:classappend="${active == 'home'}        ? 'active'" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="/unidades"    th:classappend="${active == 'unidades'}    ? 'active'" class="nav-item"><i data-lucide="home"></i> Unidades</a>
+            <a href="/moradores"   th:classappend="${active == 'moradores'}   ? 'active'" class="nav-item"><i data-lucide="users"></i> Moradores</a>
+            <a href="/visitantes"  th:classappend="${active == 'visitantes'}  ? 'active'" class="nav-item"><i data-lucide="user-plus"></i> Visitantes</a>
+            <a href="/reservas"    th:classappend="${active == 'reservas'}    ? 'active'" class="nav-item"><i data-lucide="calendar-days"></i> Reservas</a>
+            <a href="/ocorrencias" th:classappend="${active == 'ocorrencias'} ? 'active'" class="nav-item"><i data-lucide="alert-triangle"></i> Ocorrências</a>
+        </nav>
+
+        <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto" th:replace="${content}">
+        </main>
     </div>
-</nav>
 
-<main class="max-w-3xl mx-auto px-4 py-8" th:replace="${content}">
-</main>
+</div>
+
+<script>
+    lucide.createIcons();
+    const btn = document.getElementById('mobileMenuBtn');
+    const nav = document.getElementById('mobileNav');
+    if (btn && nav) btn.addEventListener('click', () => nav.classList.toggle('hidden'));
+</script>
 
 </body>
 </html>

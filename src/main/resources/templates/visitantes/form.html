@@ -1,64 +1,61 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main}, 'visitantes')}">
 <head><title>Visitante</title></head>
 <body>
 <main>
-    <h1 class="text-2xl font-bold text-gray-800 mb-6"
-        th:text="${visitante.id != null} ? 'Editar Visitante' : 'Novo Visitante'"></h1>
+    <div class="mb-6">
+        <a href="/visitantes" class="inline-flex items-center text-sm text-slate-500 hover:text-slate-700">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i> Voltar para Visitantes
+        </a>
+        <h1 class="text-2xl font-semibold text-slate-900 mt-2"
+            th:text="${visitante.id != null} ? 'Editar Visitante' : 'Novo Visitante'"></h1>
+    </div>
 
     <form th:action="${visitante.id != null} ? @{/visitantes/{id}(id=${visitante.id})} : @{/visitantes}"
           th:object="${visitante}" method="post"
-          class="bg-white shadow rounded p-6 flex flex-col gap-4">
+          class="card p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 max-w-3xl">
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
-            <input type="text" th:field="*{nome}"
-                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
-            <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"
-                  class="text-red-500 text-sm"></span>
+        <div class="md:col-span-2">
+            <label class="field-label">Nome *</label>
+            <input type="text" th:field="*{nome}" class="input"/>
+            <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Documento *</label>
-            <input type="text" th:field="*{documento}"
-                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
-            <span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"
-                  class="text-red-500 text-sm"></span>
+            <label class="field-label">Documento *</label>
+            <input type="text" th:field="*{documento}" class="input"/>
+            <span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+            <label class="field-label">Telefone</label>
             <input type="text" th:field="*{telefone}" maxlength="15"
                    oninput="maskTelefone(this)"
                    placeholder="(00) 00000-0000"
-                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                   class="input"/>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo *</label>
-            <select th:field="*{tipo}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Tipo *</label>
+            <select th:field="*{tipo}" class="input">
                 <option value="">-- Selecione --</option>
                 <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
             </select>
-            <span th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}"
-                  class="text-red-500 text-sm"></span>
+            <span th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}" class="field-error"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Ativo</label>
-            <select th:field="*{ativo}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Ativo</label>
+            <select th:field="*{ativo}" class="input">
                 <option value="">-- Selecione --</option>
                 <option th:each="v : ${simNaoValues}" th:value="${v}" th:text="${v}"></option>
             </select>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Unidade *</label>
-            <select th:field="*{unidade.id}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Unidade *</label>
+            <select th:field="*{unidade.id}" class="input">
                 <option value="">-- Selecione --</option>
                 <option th:each="u : ${unidades}"
                         th:value="${u.id}"
@@ -68,9 +65,8 @@
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Autorizado Por (Morador)</label>
-            <select th:field="*{autorizadoPor.id}"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <label class="field-label">Autorizado Por (Morador)</label>
+            <select th:field="*{autorizadoPor.id}" class="input">
                 <option value="">-- Nenhum --</option>
                 <option th:each="m : ${moradores}"
                         th:value="${m.id}"
@@ -79,11 +75,11 @@
             </select>
         </div>
 
-        <div class="flex gap-3 mt-2">
-            <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Salvar</button>
-            <a href="/visitantes"
-               class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded">Cancelar</a>
+        <div class="md:col-span-2 flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 mt-2">
+            <button type="submit" class="btn-primary">
+                <i data-lucide="check" class="w-4 h-4"></i> Salvar
+            </button>
+            <a href="/visitantes" class="btn-secondary">Cancelar</a>
         </div>
     </form>
 
