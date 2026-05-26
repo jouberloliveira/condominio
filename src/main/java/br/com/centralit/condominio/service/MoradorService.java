@@ -26,6 +26,10 @@ public class MoradorService {
 
     @Transactional
     public Morador save(Morador morador) {
+        if (!isCpfValido(morador.getCpf())) {
+            throw new IllegalArgumentException("CPF inválido: " + morador.getCpf());
+        }
+
         // Garantir CPF único global
         Optional<Morador> existente = repository.findByCpf(morador.getCpf());
         if (existente.isPresent() && !existente.get().getId().equals(morador.getId())) {
@@ -61,6 +65,25 @@ public class MoradorService {
     @Transactional
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isCpfValido(String cpf) {
+        if (cpf == null) return false;
+        String digits = cpf.replaceAll("[^0-9]", "");
+        if (digits.length() != 11) return false;
+        if (digits.chars().distinct().count() == 1) return false;
+
+        int sum1 = 0;
+        for (int i = 0; i < 9; i++) sum1 += (digits.charAt(i) - '0') * (10 - i);
+        int rem1 = (sum1 * 10) % 11;
+        if (rem1 == 10) rem1 = 0;
+        if (rem1 != (digits.charAt(9) - '0')) return false;
+
+        int sum2 = 0;
+        for (int i = 0; i < 10; i++) sum2 += (digits.charAt(i) - '0') * (11 - i);
+        int rem2 = (sum2 * 10) % 11;
+        if (rem2 == 10) rem2 = 0;
+        return rem2 == (digits.charAt(10) - '0');
     }
 
 }
