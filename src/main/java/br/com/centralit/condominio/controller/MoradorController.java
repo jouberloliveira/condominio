@@ -5,9 +5,11 @@ import br.com.centralit.condominio.enums.SimNao;
 import br.com.centralit.condominio.enums.TipoMorador;
 import br.com.centralit.condominio.service.MoradorService;
 import br.com.centralit.condominio.service.UnidadeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -43,13 +45,22 @@ public class MoradorController {
     }
 
     @PostMapping
-    public String criar(@ModelAttribute Morador morador) {
+    public String criar(@Valid @ModelAttribute Morador morador, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            addFormModel(model);
+            return "moradores/form";
+        }
         service.save(morador);
         return "redirect:/moradores";
     }
 
     @PostMapping("/{id}")
-    public String atualizar(@PathVariable Long id, @ModelAttribute Morador morador) {
+    public String atualizar(@PathVariable Long id, @Valid @ModelAttribute Morador morador,
+                            BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            addFormModel(model);
+            return "moradores/form";
+        }
         morador.setId(id);
         service.save(morador);
         return "redirect:/moradores";
